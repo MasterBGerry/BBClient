@@ -68,8 +68,9 @@ public class ClientCombatHandler {
         double closestDistance = reach * reach;
 
         for (Entity entity : player.getWorld().getOtherEntities(player, searchBox, e -> !e.isSpectator() && e.canHit())) {
-            // Expand hitbox slightly for 1.7/1.8 feel
-            Box entityBox = entity.getBoundingBox().expand(HITBOX_EXPANSION);
+            // Expand hitbox slightly for 1.7/1.8 feel (only on BB servers)
+            double expansion = BBServerConnection.isConnectedToBBServer() ? HITBOX_EXPANSION : 0.0;
+            Box entityBox = entity.getBoundingBox().expand(expansion);
             var hitResult = entityBox.raycast(eyePos, endPos);
 
             if (hitResult.isPresent()) {
@@ -91,17 +92,21 @@ public class ClientCombatHandler {
 
     /**
      * Get effective reach distance
+     * Only extends reach on BadBuck servers — vanilla reach on other servers
      */
     public static double getEffectiveReach() {
-        // Always use extended reach for BBClient
-        return EXTENDED_REACH;
+        if (BBServerConnection.isConnectedToBBServer()) {
+            return EXTENDED_REACH;
+        }
+        return 3.0; // Vanilla reach
     }
 
     /**
      * Check if extended hitbox should be used
+     * Only enabled on BadBuck servers to avoid anti-cheat flags
      */
     public static boolean shouldUseExtendedHitbox() {
-        return true; // Always enabled
+        return BBServerConnection.isConnectedToBBServer();
     }
 
     /**
