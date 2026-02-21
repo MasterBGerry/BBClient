@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "bbclient",
+  "version": "1.0.0",
+  "name": "BBClient",
+  "description": "Client-side mod that brings back 1.7/1.8 combat mechanics. Made for Badbuck.net",
+  "authors": [
+    "Badbuck Team"
+  ],
+  "contact": {
+    "homepage": "https://badbuck.net"
+  },
+  "license": "MIT",
+  "icon": "assets/bbclient/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.bbclient.client.BBClientMod"
+    ]
+  },
+  "mixins": [
+    "bbclient.mixins.json"
+  ],
+  "accessWidener": "bbclient.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.6",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

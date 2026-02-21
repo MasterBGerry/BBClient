@@ -1,0 +1,6 @@
+accessWidener v2 named
+
+# HeldItemRenderer - allow modifying equipProgress to fix unblock animation
+accessible field net/minecraft/client/render/item/HeldItemRenderer equipProgressMainHand F
+mutable field net/minecraft/client/render/item/HeldItemRenderer equipProgressMainHand F
+accessible field net/minecraft/client/render/item/HeldItemRenderer mainHand Lnet/minecraft/item/ItemStack;

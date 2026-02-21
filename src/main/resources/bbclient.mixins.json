@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.bbclient.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ClientPlayerEntityMixin",
+    "ClientPlayerInteractionManagerMixin",
+    "ClientWorldMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "FishingBobberEntityRendererMixin",
+    "HandledScreenMixin",
+    "HeldItemRendererMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "MinecraftClientMixin",
+    "PlayerInventoryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
