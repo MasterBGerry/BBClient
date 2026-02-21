@@ -62,15 +62,24 @@ public abstract class MinecraftClientMixin {
     public ClientWorld world;
 
     /**
-     * Release sword blocking when a GUI screen opens.
-     * In lobby, right-clicking a sword opens a menu (BuckPractice kit selector etc.)
-     * but the blocking animation stays frozen. This releases it.
+     * Release sword blocking and cancel block breaking when a GUI screen opens.
+     * - Sword blocking: right-clicking a sword in lobby opens a menu but the blocking
+     *   animation stays frozen. This releases it.
+     * - Block breaking: our simultaneous actions mixins allow mining while using items,
+     *   but when a GUI opens we must cancel the break to prevent ghost blocks (client
+     *   breaks the block visually but server rejects it because player is in a GUI).
      */
     @Inject(method = "setScreen", at = @At("HEAD"))
     private void bbclient$releaseBlockingOnScreenOpen(Screen screen, CallbackInfo ci) {
-        if (screen != null && this.player != null && this.player.isUsingItem()
-                && this.player.getActiveItem().isIn(ItemTags.SWORDS)) {
-            this.player.stopUsingItem();
+        if (screen != null && this.player != null) {
+            // Release sword blocking
+            if (this.player.isUsingItem() && this.player.getActiveItem().isIn(ItemTags.SWORDS)) {
+                this.player.stopUsingItem();
+            }
+            // Cancel any ongoing block breaking to prevent ghost blocks
+            if (this.interactionManager != null) {
+                this.interactionManager.cancelBlockBreaking();
+            }
         }
     }
 
@@ -97,15 +106,24 @@ public abstract class MinecraftClientMixin {
         return false;
     }
 
+    @Shadow
+    public Screen currentScreen;
+
     /**
      * Allow mining while using item (continueAttack checks isUsingItem)
-     * In 1.7/1.8, you could continue mining while eating/blocking
+     * In 1.7/1.8, you could continue mining while eating/blocking.
+     * EXCEPTION: If a GUI screen is open, return true (block mining) to prevent
+     * ghost blocks — the server won't process block breaks while player is in a GUI.
      */
     @WrapOperation(
         method = "handleBlockBreaking",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z")
     )
     private boolean bbclient$allowMiningWhileUsingItem(ClientPlayerEntity instance, Operation<Boolean> original) {
+        // If a GUI is open, don't bypass — block mining to prevent ghost blocks
+        if (this.currentScreen != null) {
+            return original.call(instance);
+        }
         // Return false to bypass the "is using item" check
         // This allows mining while using items (eating, blocking)
         return false;
