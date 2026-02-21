@@ -7,8 +7,8 @@ A Fabric 1.21.6 client mod that brings back 1.7/1.8 PvP mechanics. Designed to w
 ### Combat
 - **Sword Blocking** — right-click sword to block, with legacy 1.7/1.8 animation
 - **No Attack Cooldown** — cooldown bar always full
-- **Extended Reach** — 3.0 blocks
-- **Extended Hitbox** — +0.1 entity hitbox expansion
+- **Extended Reach** — 3.0 blocks (Disabled when the server doesn't accept it trought a handshake)
+- **Extended Hitbox** — +0.1 entity hitbox expansion (Disabled when the server doesn't accept it trought a handshake)
 - **CPS Particles** — crit/sharpness particles on every click, not just hits
 - **Block & Hit** — attack while sword blocking
 
